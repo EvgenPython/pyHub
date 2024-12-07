@@ -5,7 +5,7 @@ class Coordinates:
         else:
             self.points = []
     def __str__(self):
-        if len(self.points):
+        if len(self.points) > 0:
             return f"Координаты({', '.join(map(str, self.points))})"
         else:
             return "Пустые координаты"
@@ -18,10 +18,9 @@ class Coordinates:
                 temp = [i + j for i, j in zip(self.points, other.points)]
                 return Coordinates(*temp)
             else:
-                print("Сложение наборов разной длины невозможно")
-                return None
+                return "Сложение наборов разной длины невозможно"
         else:
-            print(f"Невозможно сложить с {other}")
+            return f"Невозможно сложить с {other}"
     def __mul__(self, other):
         if isinstance(other, int):
             return Coordinates([i * other for i in self.points])
@@ -30,10 +29,16 @@ class Coordinates:
                 temp = [i * j for i, j in zip(self.points, other.points)]
                 return Coordinates(*temp)
             else:
-                print("Умножение наборов разной длины невозможно")
-                return None
+                return "Умножение наборов разной длины невозможно"
         else:
-            print(f"Невозможно умножить с {other}")
+            return f"Невозможно умножить с {other}"
+coords1 = Coordinates(1, 2, 3)
+coords2 = Coordinates(3, 4, 5)
+coords3 = coords1 + coords2
+coords4 = coords3 + 5
+coords5 = coords1 * 2
+
+# Ассерты для проверки методов класса
 coords1 = Coordinates(1, 2, 3)
 coords2 = Coordinates(3, 4, 5)
 coords3 = coords1 + coords2
