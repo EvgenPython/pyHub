@@ -26,7 +26,7 @@ class Coordinates:
             return Coordinates([i * other for i in self.points])
         elif isinstance(other, Coordinates):
             if len(self.points) == len(other.points):
-                return Coordinates([i * other for i in self.points])
+                return Coordinates(*[i * j for i, j in zip(self.points, other.points)])
             else:
                 return "Умножение наборов разной длины невозможно"
         else:
@@ -37,6 +37,7 @@ coords3 = coords1 + coords2
 coords4 = coords3 + 5
 coords5 = coords1 * 2
 
+# Ассерты для проверки методов класса
 coords1 = Coordinates(1, 2, 3)
 coords2 = Coordinates(3, 4, 5)
 coords3 = coords1 + coords2
