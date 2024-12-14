@@ -1,61 +1,49 @@
-class Coordinates:
-    def __init__(self, *args):
-        if len(args):
-            self.points = sorted([elem for elem in args if isinstance(elem, int)])
+class Cart:
+    def __init__(self):
+        self.products = {}
+
+    def __getitem__(self, product):
+        return self.products.get(product, 0)
+
+    def __setitem__(self, product, quantity):
+        self.products[product] = quantity
+
+    def __delitem__(self, product):
+        del self.products[product]
+
+    def add_product(self, product, quantity=1):
+        if product in self.products:
+            self.products[product] += quantity
         else:
-            self.points = []
-    def __str__(self):
-        if len(self.points) > 0:
-            return f"Координаты({', '.join(map(str, self.points))})"
-        else:
-            return "Пустые координаты"
-    def __add__(self, other):
-        if isinstance(other, int):
-            temp = [i + other for i in self.points]
-            return Coordinates(*temp)
-        elif isinstance(other, Coordinates):
-            if len(self.points) == len(other.points):
-                temp = [i + j for i, j in zip(self.points, other.points)]
-                return Coordinates(*temp)
+            self.products[product] = quantity
+
+    def remove_product(self, product, quantity=1):
+        if product in self.products:
+            if self.products[product] <= quantity:
+                del self.products[product]
             else:
-                return "Сложение наборов разной длины невозможно"
-        else:
-            return f"Невозможно сложить с {other}"
-    def __mul__(self, other):
-        if isinstance(other, int):
-            return Coordinates([i * other for i in self.points])
-        elif isinstance(other, Coordinates):
-            if len(self.points) == len(other.points):
-                return Coordinates(*[i * j for i, j in zip(self.points, other.points)])
-            else:
-                return "Умножение наборов разной длины невозможно"
-        else:
-            return f"Невозможно умножить с {other}"
-coords1 = Coordinates(1, 2, 3)
-coords2 = Coordinates(3, 4, 5)
-coords3 = coords1 + coords2
-coords4 = coords3 + 5
-coords5 = coords1 * 2
+                self.products[product] -= quantity
 
-# Ассерты для проверки методов класса
-coords1 = Coordinates(1, 2, 3)
-coords2 = Coordinates(3, 4, 5)
-coords3 = coords1 + coords2
-coords4 = coords3 + 5
-coords5 = coords1 * 2
 
-# Ассерты для проверки методов класса
-assert str(coords1) == "Координаты(1, 2, 3)", 'Ошибка: метод __str__() объекта coords1 не возвращает "Координаты(1, 2, 3)".'
-assert str(coords2) == "Координаты(3, 4, 5)", 'Ошибка: метод __str__() объекта coords2 не возвращает "Координаты(3, 4, 5)".'
-assert str(coords3) == "Координаты(4, 6, 8)", 'Ошибка: метод __str__() объекта coords3 не возвращает "Координаты(4, 6, 8)".'
-assert str(coords4) == "Координаты(9, 11, 13)", 'Ошибка: метод __str__() объекта coords4 не возвращает "Координаты(9, 11, 13)".'
-assert str(coords5) == "Координаты(2, 4, 6)", 'Ошибка: метод __str__() объекта coords5 не возвращает "Координаты(2, 4, 6)".'
-assert coords5 + 'hello' == "Невозможно сложить с hello", 'Ошибка: метод __add__() объекта coords5 не возвращает "Невозможно сложить с hello".'
+cart = Cart()
+print(cart["яблоко"])  # Вывод: 0 (товар отсутствует)
+cart.products["яблоко"] = 5
+print(cart["яблоко"])  # Вывод: 5
 
-# Проверка сложения с вектором разной длины
-coords6 = Coordinates(1, 2)
-assert (coords1 + coords6) == "Сложение наборов разной длины невозможно", 'Ошибка: метод __add__() для coords1 и coords6 не возвращает "Сложение наборов разной длины невозможно".'
+# Ниже расположен код для проверок, его не нужно удалять
+cart = Cart()
+cart.add_product('Apple', 5)
+cart.add_product('Banana')
+cart['Orange'] = 3
 
-# Проверка умножения с вектором разной длины
-assert (coords1 * coords6) == "Умножение наборов разной длины невозможно", 'Ошибка: метод __mul__() для coords1 и coords6 не возвращает "Умножение наборов разной длины невозможно".'
+assert cart['Apple'] == 5, 'Ошибка: метод __getitem__ не возвращает корректное значение для товара "Apple".'
+assert cart['Banana'] == 1, 'Ошибка: метод __getitem__ не возвращает корректное значение для товара "Banana".'
+assert cart['Orange'] == 3, 'Ошибка: метод __getitem__ не возвращает корректное значение для товара "Orange".'
+
+cart.remove_product('Apple', 2)
+assert cart['Apple'] == 3, 'Ошибка: метод __getitem__ не возвращает корректное значение для товара "Apple" после уменьшения количества.'
+
+cart.remove_product('Orange', 3)
+assert cart['Orange'] == 0, 'Ошибка: метод __getitem__ не возвращает корректное значение для товара "Orange" после его удаления.'
+
 print('Good')
